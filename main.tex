@@ -42,64 +42,93 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Arithmetic Expressions: Addition}
-
+	\frametitle{Arithmetic Expressions: Semantics}
 	\[
-		\infer[(\textsc{Add-L})]
+		\infer[(\textsc{Add})]
 		{
-			e_1 + e_2 \to e_1' + e_2
+			e_1 + e_2 \Downarrow \num{v_1 + v_2}
 		}
 		{
-			e_1 \to e_1'
+			e_1 \Downarrow v_1 & e_2 \Downarrow v_2
 		}
-		\qquad \quad
-		\infer[(\textsc{Add-R})]
+		\qquad
+		\infer[(\textsc{Mul})]
 		{
-			\num{n} + e_2 \to \num{n} + e_2'
+			e_1 * e_2 \Downarrow \num{v_1 * v_2}
 		}
 		{
-			e_2 \to e_2'
+			e_1 \Downarrow v_1 & e_2 \Downarrow v_2
 		}
 	\]
 	\vspace{.5em}
 	\[
-		\infer[(\textsc{Add-V})]
+		\infer[(\textsc{Const})]
 		{
-			\num{n} + \num{m} \to \num{n + m}
+			\num{n} \Downarrow \num{n}
 		}
 		{}
 	\]
 \end{frame}
 
-\begin{frame}
-	\frametitle{Arithmetic Expressions: Multiplication}
-
-	\[
-		\infer[(\textsc{Mul-L})]
-		{
-			e_1 * e_2 \to e_1' * e_2
-		}
-		{
-			e_1 \to e_1'
-		}
-		\qquad \quad
-		\infer[(\textsc{Mul-R})]
-		{
-			\num{n} * e_2 \to \num{n} * e_2'
-		}
-		{
-			e_2 \to e_2'
-		}
-	\]
-	\vspace{.5em}
-	\[
-		\infer[(\textsc{Mul-V})]
-		{
-			\num{n} * \num{m} \to \num{n \cdot m}
-		}
-		{}
-	\]
-\end{frame}
+% \begin{frame}
+% 	\frametitle{Arithmetic Expressions: Addition}
+% 
+% 	\[
+% 		\infer[(\textsc{Add-L})]
+% 		{
+% 			e_1 + e_2 \to e_1' + e_2
+% 		}
+% 		{
+% 			e_1 \to e_1'
+% 		}
+% 		\qquad \quad
+% 		\infer[(\textsc{Add-R})]
+% 		{
+% 			\num{n} + e_2 \to \num{n} + e_2'
+% 		}
+% 		{
+% 			e_2 \to e_2'
+% 		}
+% 	\]
+% 	\vspace{.5em}
+% 	\[
+% 		\infer[(\textsc{Add-V})]
+% 		{
+% 			\num{n} + \num{m} \to \num{n + m}
+% 		}
+% 		{}
+% 	\]
+% \end{frame}
+% 
+% \begin{frame}
+% 	\frametitle{Arithmetic Expressions: Multiplication}
+% 
+% 	\[
+% 		\infer[(\textsc{Mul-L})]
+% 		{
+% 			e_1 * e_2 \to e_1' * e_2
+% 		}
+% 		{
+% 			e_1 \to e_1'
+% 		}
+% 		\qquad \quad
+% 		\infer[(\textsc{Mul-R})]
+% 		{
+% 			\num{n} * e_2 \to \num{n} * e_2'
+% 		}
+% 		{
+% 			e_2 \to e_2'
+% 		}
+% 	\]
+% 	\vspace{.5em}
+% 	\[
+% 		\infer[(\textsc{Mul-V})]
+% 		{
+% 			\num{n} * \num{m} \to \num{n \cdot m}
+% 		}
+% 		{}
+% 	\]
+% \end{frame}
 
 \begin{frame}
 	\frametitle{Variables: Syntax}
@@ -130,114 +159,161 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Variables: Variable Reference}
-
+	\frametitle{Variables: Semantics}
 	\[
-		\infer[(\textsc{Var-U})]
+		\infer[(\textsc{Const})]
 		{
-			\ctx{ x, \sigma } \to \ctx{ \num{n}, \sigma }
-		}
-		{
-			(x \mapsto \num{n}) \in \sigma
-		}
-	\]
-\end{frame}
-
-\begin{frame}
-	\frametitle{Variables: Variable Definition}
-
-	\[
-		\infer[(\textsc{Var-D1})]
-		{
-			\ctx{ \texttt{let } x = e_1 \texttt{ in } e_2, \sigma } \to \ctx{ \texttt{let } x = e_1' \texttt{ in } e_2, \sigma }
-		}
-		{
-			\ctx{ e_1, \sigma } \to \ctx{ e_1', \sigma }
-		}
-	\]
-	\vspace{.5em}
-	\[
-		\infer[(\textsc{Var-D2})]
-		{
-			\ctx{ \texttt{let } x = \num{n} \texttt{ in } e_2, \sigma } \to \ctx{ \texttt{let } x = \num{n} \texttt{ in } e_2', \sigma }
-		}
-		{
-			\ctx{ e_2, \sigma \cup \set{ x \mapsto \num{n} } } \to \ctx{ e_2', \sigma \cup \set{ x \mapsto \num{n} } }
-		}
-	\]
-	\vspace{.5em}
-	\[
-		\infer[(\textsc{Var-D3})]
-		{
-			\ctx{ \texttt{let } x = \num{n} \texttt{ in } \num{m}, \sigma } \to \ctx{ \num{m}, \sigma }
-		}
-		{
-		}
-	\]
-\end{frame}
-
-\begin{frame}
-	\frametitle{Arithmetic Expressions: Addition}
-
-	\[
-		\infer[(\textsc{Add-L})]
-		{
-			\ctx{ e_1 + e_2, \sigma } \to \ctx{ e_1' + e_2, \sigma }
-		}
-		{
-			\ctx{ e_1, \sigma } \to \ctx{ e_1', \sigma }
-		}
-	\]
-	\vspace{.5em}
-	\[
-		\infer[(\textsc{Add-R})]
-		{
-			\ctx{ \num{n} + e_2, \sigma } \to \ctx{ \num{n} + e_2', \sigma }
-		}
-		{
-			\ctx{ e_2, \sigma } \to \ctx{ e_2', \sigma }
-		}
-	\]
-	\vspace{.5em}
-	\[
-		\infer[(\textsc{Add-V})]
-		{
-			\ctx{ \num{n} + \num{m}, \sigma } \to \ctx{ \num{n + m}, \sigma }
+			\ctx{ \num{n}, S } \Downarrow \num{n}
 		}
 		{}
-	\]
-\end{frame}
-
-\begin{frame}
-	\frametitle{Arithmetic Expressions: Multiplication}
-
-	\[
-		\infer[(\textsc{Mul-L})]
+		\qquad
+		\infer[(\textsc{Var})]
 		{
-			\ctx{ e_1 * e_2, \sigma } \to \ctx{ e_1' * e_2, \sigma }
+			\ctx{ x, S } \Downarrow \num{n}
 		}
 		{
-			\ctx{ e_1, \sigma } \to \ctx{ e_1', \sigma }
+			x \mapsto \num{n} \text{ in } S
 		}
 	\]
 	\vspace{.5em}
 	\[
-		\infer[(\textsc{Mul-R})]
+		\infer[(\textsc{Add})]
 		{
-			\ctx{ \num{n} * e_2, \sigma } \to \ctx{ \num{n} * e_2', \sigma }
+			e_1 + e_2 \Downarrow \num{m + n}
 		}
 		{
-			\ctx{ e_2, \sigma } \to \ctx{ e_2', \sigma }
+			e_1 \Downarrow \num{m} & e_2 \Downarrow \num{n}
+		}
+		\qquad
+		\infer[(\textsc{Mul})]
+		{
+			e_1 * e_2 \Downarrow \num{m \cdot n}
+		}
+		{
+			e_1 \Downarrow \num{m} & e_2 \Downarrow \num{n}
 		}
 	\]
 	\vspace{.5em}
 	\[
-		\infer[(\textsc{Mul-V})]
+		\infer[(\textsc{Let})]
 		{
-			\ctx{ \num{n} * \num{m}, \sigma } \to \ctx{ \num{n \cdot m}, \sigma }
+			\ctx{ \texttt{let $x$ = $e_1$ in $e_2$}, S } \Downarrow v
 		}
-		{}
+		{
+			\ctx{ e_1, S } \Downarrow v_1 & \ctx{ e_2, S\set{ x \mapsto v_1 } } \Downarrow v
+		}
 	\]
 \end{frame}
+
+% \begin{frame}
+% 	\frametitle{Variables: Variable Reference}
+% 
+% 	\[
+% 		\infer[(\textsc{Var-U})]
+% 		{
+% 			\ctx{ x, \sigma } \to \ctx{ \num{n}, \sigma }
+% 		}
+% 		{
+% 			(x \mapsto \num{n}) \in \sigma
+% 		}
+% 	\]
+% \end{frame}
+% 
+% \begin{frame}
+% 	\frametitle{Variables: Variable Definition}
+% 
+% 	\[
+% 		\infer[(\textsc{Var-D1})]
+% 		{
+% 			\ctx{ \texttt{let } x = e_1 \texttt{ in } e_2, \sigma } \to \ctx{ \texttt{let } x = e_1' \texttt{ in } e_2, \sigma }
+% 		}
+% 		{
+% 			\ctx{ e_1, \sigma } \to \ctx{ e_1', \sigma }
+% 		}
+% 	\]
+% 	\vspace{.5em}
+% 	\[
+% 		\infer[(\textsc{Var-D2})]
+% 		{
+% 			\ctx{ \texttt{let } x = \num{n} \texttt{ in } e_2, \sigma } \to \ctx{ \texttt{let } x = \num{n} \texttt{ in } e_2', \sigma }
+% 		}
+% 		{
+% 			\ctx{ e_2, \sigma \cup \set{ x \mapsto \num{n} } } \to \ctx{ e_2', \sigma \cup \set{ x \mapsto \num{n} } }
+% 		}
+% 	\]
+% 	\vspace{.5em}
+% 	\[
+% 		\infer[(\textsc{Var-D3})]
+% 		{
+% 			\ctx{ \texttt{let } x = \num{n} \texttt{ in } \num{m}, \sigma } \to \ctx{ \num{m}, \sigma }
+% 		}
+% 		{
+% 		}
+% 	\]
+% \end{frame}
+% 
+% \begin{frame}
+% 	\frametitle{Arithmetic Expressions: Addition}
+% 
+% 	\[
+% 		\infer[(\textsc{Add-L})]
+% 		{
+% 			\ctx{ e_1 + e_2, \sigma } \to \ctx{ e_1' + e_2, \sigma }
+% 		}
+% 		{
+% 			\ctx{ e_1, \sigma } \to \ctx{ e_1', \sigma }
+% 		}
+% 	\]
+% 	\vspace{.5em}
+% 	\[
+% 		\infer[(\textsc{Add-R})]
+% 		{
+% 			\ctx{ \num{n} + e_2, \sigma } \to \ctx{ \num{n} + e_2', \sigma }
+% 		}
+% 		{
+% 			\ctx{ e_2, \sigma } \to \ctx{ e_2', \sigma }
+% 		}
+% 	\]
+% 	\vspace{.5em}
+% 	\[
+% 		\infer[(\textsc{Add-V})]
+% 		{
+% 			\ctx{ \num{n} + \num{m}, \sigma } \to \ctx{ \num{n + m}, \sigma }
+% 		}
+% 		{}
+% 	\]
+% \end{frame}
+% 
+% \begin{frame}
+% 	\frametitle{Arithmetic Expressions: Multiplication}
+% 
+% 	\[
+% 		\infer[(\textsc{Mul-L})]
+% 		{
+% 			\ctx{ e_1 * e_2, \sigma } \to \ctx{ e_1' * e_2, \sigma }
+% 		}
+% 		{
+% 			\ctx{ e_1, \sigma } \to \ctx{ e_1', \sigma }
+% 		}
+% 	\]
+% 	\vspace{.5em}
+% 	\[
+% 		\infer[(\textsc{Mul-R})]
+% 		{
+% 			\ctx{ \num{n} * e_2, \sigma } \to \ctx{ \num{n} * e_2', \sigma }
+% 		}
+% 		{
+% 			\ctx{ e_2, \sigma } \to \ctx{ e_2', \sigma }
+% 		}
+% 	\]
+% 	\vspace{.5em}
+% 	\[
+% 		\infer[(\textsc{Mul-V})]
+% 		{
+% 			\ctx{ \num{n} * \num{m}, \sigma } \to \ctx{ \num{n \cdot m}, \sigma }
+% 		}
+% 		{}
+% 	\]
+% \end{frame}
 
 \end{document}

@@ -1,7 +1,10 @@
 \documentclass{beamer}
 \usepackage{amsmath}
+\usepackage{formal-grammar,proof}
 \usepackage{./prelude}
 \usepackage[mathrm=sym]{unicode-math}
+
+\newcommand{\num}[1]{\texttt{num}[#1]}
 
 \title{Template}
 \author{Ethan Zhang, Srujan Roplekar}
@@ -11,5 +14,89 @@
 \begin{document}
 
 \frame{\titlepage}
+
+
+\section{Arithmetic Expressions}
+
+\begin{frame}
+	\frametitle{Arithmetic Expressions: Syntax}
+
+	\centering
+	\begin{grammar}
+		\firstcase{E}{\num{n}}{Numeric constants}
+		\otherform{\nonterm{E} + \nonterm{E}}{Addition}
+		\otherform{\nonterm{E} * \nonterm{E}}{Multiplication}
+	\end{grammar}
+
+	% TODO: examples
+\end{frame}
+
+\begin{frame}
+	\frametitle{Arithmetic Expressions: Values}
+
+	The first step of defining a semantics is to decide on what the set of \emph{values} should be, i.e. a stopping condition.
+
+	In \textsc{Arith}, these are the numeric constants: terms of the form \num{$n$}.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Arithmetic Expressions: Addition}
+
+	\[
+		\infer[(\textsc{Add-L})]
+		{
+			e_1 + e_2 \to e_1' + e_2
+		}
+		{
+			e_1 \to e_1'
+		}
+		\qquad \quad
+		\infer[(\textsc{Add-R})]
+		{
+			\num{n} + e_2 \to \num{n} + e_2'
+		}
+		{
+			e_2 \to e_2'
+		}
+	\]
+	\vspace{.5em}
+	\[
+		\infer[(\textsc{Add-V})]
+		{
+			\num{n} + \num{m} \to \num{n + m}
+		}
+		{}
+	\]
+\end{frame}
+
+\begin{frame}
+	\frametitle{Arithmetic Expressions: Multiplication}
+
+	\[
+		\infer[(\textsc{Mul-L})]
+		{
+			e_1 * e_2 \to e_1' * e_2
+		}
+		{
+			e_1 \to e_1'
+		}
+		\qquad \quad
+		\infer[(\textsc{Mul-R})]
+		{
+			\num{n} * e_2 \to \num{n} * e_2'
+		}
+		{
+			e_2 \to e_2'
+		}
+	\]
+	\vspace{.5em}
+	\[
+		\infer[(\textsc{Mul-V})]
+		{
+			\num{n} + \num{m} \to \num{n \cdot m}
+		}
+		{}
+	\]
+\end{frame}
 
 \end{document}

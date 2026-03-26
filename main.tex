@@ -5,6 +5,8 @@
 \usepackage[mathrm=sym]{unicode-math}
 
 \newcommand{\num}[1]{\texttt{num}[#1]}
+\newcommand{\ctx}[1]{\langle #1 \rangle}
+\newcommand{\set}[1]{\{ #1 \}}
 
 \title{Template}
 \author{Ethan Zhang, Srujan Roplekar}
@@ -93,7 +95,146 @@
 	\[
 		\infer[(\textsc{Mul-V})]
 		{
-			\num{n} + \num{m} \to \num{n \cdot m}
+			\num{n} * \num{m} \to \num{n \cdot m}
+		}
+		{}
+	\]
+\end{frame}
+
+\begin{frame}
+	\frametitle{Variables: Syntax}
+
+	\centering
+	\begin{grammar}
+		\firstcase{E}{\num{n}}{Numeric constants}
+		\otherform{x}{Variable reference}
+		\otherform{\nonterm{E} + \nonterm{E}}{Addition}
+		\otherform{\nonterm{E} * \nonterm{E}}{Multiplication}
+		\otherform{\texttt{let } x = \nonterm{E} \texttt{ in } \nonterm{E}}{Variable definition}
+	\end{grammar}
+
+	% TODO: examples
+\end{frame}
+
+\begin{frame}
+	\frametitle{Variables: Context}
+
+	How do we keep track of the current value of a variable?
+	By introducing an \emph{evaluation context}, which you can think of as a ``bag'' of data necessary to execute a program.
+
+	In \textsc{Arith}, the context only contained the program to be executed.
+	In \textsc{Arith+Var}, we must also keep track of a mapping of variable symbols to values, which we'll call the \emph{environment}:
+	\[
+		\ctx{ \text{program}, \text{environment} }
+	\]
+\end{frame}
+
+\begin{frame}
+	\frametitle{Variables: Variable Reference}
+
+	\[
+		\infer[(\textsc{Var-U})]
+		{
+			\ctx{ x, \sigma } \to \ctx{ \num{n}, \sigma }
+		}
+		{
+			(x \mapsto \num{n}) \in \sigma
+		}
+	\]
+\end{frame}
+
+\begin{frame}
+	\frametitle{Variables: Variable Definition}
+
+	\[
+		\infer[(\textsc{Var-D1})]
+		{
+			\ctx{ \texttt{let } x = e_1 \texttt{ in } e_2, \sigma } \to \ctx{ \texttt{let } x = e_1' \texttt{ in } e_2, \sigma }
+		}
+		{
+			\ctx{ e_1, \sigma } \to \ctx{ e_1', \sigma }
+		}
+	\]
+	\vspace{.5em}
+	\[
+		\infer[(\textsc{Var-D2})]
+		{
+			\ctx{ \texttt{let } x = \num{n} \texttt{ in } e_2, \sigma } \to \ctx{ \texttt{let } x = \num{n} \texttt{ in } e_2', \sigma }
+		}
+		{
+			\ctx{ e_2, \sigma \cup \set{ x \mapsto \num{n} } } \to \ctx{ e_2', \sigma \cup \set{ x \mapsto \num{n} } }
+		}
+	\]
+	\vspace{.5em}
+	\[
+		\infer[(\textsc{Var-D3})]
+		{
+			\ctx{ \texttt{let } x = \num{n} \texttt{ in } \num{m}, \sigma } \to \ctx{ \num{m}, \sigma }
+		}
+		{
+		}
+	\]
+\end{frame}
+
+\begin{frame}
+	\frametitle{Arithmetic Expressions: Addition}
+
+	\[
+		\infer[(\textsc{Add-L})]
+		{
+			\ctx{ e_1 + e_2, \sigma } \to \ctx{ e_1' + e_2, \sigma }
+		}
+		{
+			\ctx{ e_1, \sigma } \to \ctx{ e_1', \sigma }
+		}
+	\]
+	\vspace{.5em}
+	\[
+		\infer[(\textsc{Add-R})]
+		{
+			\ctx{ \num{n} + e_2, \sigma } \to \ctx{ \num{n} + e_2', \sigma }
+		}
+		{
+			\ctx{ e_2, \sigma } \to \ctx{ e_2', \sigma }
+		}
+	\]
+	\vspace{.5em}
+	\[
+		\infer[(\textsc{Add-V})]
+		{
+			\ctx{ \num{n} + \num{m}, \sigma } \to \ctx{ \num{n + m}, \sigma }
+		}
+		{}
+	\]
+\end{frame}
+
+\begin{frame}
+	\frametitle{Arithmetic Expressions: Multiplication}
+
+	\[
+		\infer[(\textsc{Mul-L})]
+		{
+			\ctx{ e_1 * e_2, \sigma } \to \ctx{ e_1' * e_2, \sigma }
+		}
+		{
+			\ctx{ e_1, \sigma } \to \ctx{ e_1', \sigma }
+		}
+	\]
+	\vspace{.5em}
+	\[
+		\infer[(\textsc{Mul-R})]
+		{
+			\ctx{ \num{n} * e_2, \sigma } \to \ctx{ \num{n} * e_2', \sigma }
+		}
+		{
+			\ctx{ e_2, \sigma } \to \ctx{ e_2', \sigma }
+		}
+	\]
+	\vspace{.5em}
+	\[
+		\infer[(\textsc{Mul-V})]
+		{
+			\ctx{ \num{n} * \num{m}, \sigma } \to \ctx{ \num{n \cdot m}, \sigma }
 		}
 		{}
 	\]

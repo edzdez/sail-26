@@ -17,6 +17,19 @@
 
 \frame{\titlepage}
 
+\section{Introduction}
+
+\begin{frame}
+	\frametitle{What are Semantics?}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Why Study Semantics?}
+\end{frame}
+
+\begin{frame}
+	\tableofcontents
+\end{frame}
 
 \section{Arithmetic Expressions}
 
@@ -25,12 +38,16 @@
 
 	\centering
 	\begin{grammar}
-		\firstcase{E}{\num{n}}{Numeric constants}
-		\otherform{\nonterm{E} + \nonterm{E}}{Addition}
-		\otherform{\nonterm{E} * \nonterm{E}}{Multiplication}
+		\firstcase{e}{\num{n}}{Numeric constants}
+		\otherform{\nonterm{e} + \nonterm{e}}{Addition}
+		\otherform{\nonterm{e} * \nonterm{e}}{Multiplication}
 	\end{grammar}
 
 	% TODO: examples
+\end{frame}
+
+\begin{frame}
+	\frametitle{Aside: Operational Semantics}
 \end{frame}
 
 \begin{frame}
@@ -70,23 +87,25 @@
 	\]
 \end{frame}
 
+\section{Adding Variables}
+
 \begin{frame}
-	\frametitle{Variables: Syntax}
+	\frametitle{Adding Variables: Syntax}
 
 	\centering
 	\begin{grammar}
-		\firstcase{E}{\num{n}}{Numeric constants}
+		\firstcase{e}{\num{n}}{Numeric constants}
 		\otherform{x}{Variable reference}
-		\otherform{\nonterm{E} + \nonterm{E}}{Addition}
-		\otherform{\nonterm{E} * \nonterm{E}}{Multiplication}
-		\otherform{\texttt{let } x = \nonterm{E} \texttt{ in } \nonterm{E}}{Variable definition}
+		\otherform{\nonterm{e} + \nonterm{e}}{Addition}
+		\otherform{\nonterm{e} * \nonterm{e}}{Multiplication}
+		\otherform{\texttt{let $x$ = $\nonterm{e}$ in $\nonterm{e}$}}{Variable definition}
 	\end{grammar}
 
 	% TODO: examples
 \end{frame}
 
 \begin{frame}
-	\frametitle{Variables: Context}
+	\frametitle{Adding Variables: Context}
 
 	How do we keep track of the current value of a variable?
 	By introducing an \emph{evaluation context}, which you can think of as a ``bag'' of data necessary to execute a program.
@@ -99,7 +118,7 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Variables: Semantics}
+	\frametitle{Adding Variables: Semantics}
 	\[
 		\infer[(\textsc{Const})]
 		{

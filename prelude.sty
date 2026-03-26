@@ -1,0 +1,42 @@
+\usetheme{Madrid}
+\useinnertheme{circles}
+
+\definecolor{UIblue}{RGB}{19,41,75}     % primary
+\definecolor{UIblue2}{RGB}{5,86,165}    % subheaders
+\definecolor{UIblue3}{RGB}{32,64,151}   % knockout headers
+
+\definecolor{UIgray}{RGB}{232,233,234}
+\definecolor{UIgray2}{RGB}{166,168,171}
+\definecolor{UIgray3}{RGB}{94,102,105}
+
+\definecolor{UIUCorange}{RGB}{255,95,5} % accent color
+
+\setbeamercovered{transparent}
+\setbeamertemplate{caption}[numbered]
+
+\setbeamercolor{palette primary}{bg=UIblue,fg=white}
+\setbeamercolor{palette secondary}{bg=UIblue,fg=white}
+\setbeamercolor{palette tertiary}{bg=UIblue,fg=white}
+\setbeamercolor{palette quaternary}{bg=UIblue,fg=white}
+
+\setbeamercolor{date in head/foot}{bg=UIUCorange,fg=UIblue}
+\setbeamercolor{title in head/foot}{bg=UIgray,fg=UIblue}
+
+\setbeamercolor{structure}{fg=UIblue}
+\setbeamercolor{alerted text}{fg=UIUCorange}
+\setbeamercolor{example text}{fg=UIblue2}
+\setbeamercolor{button}{fg=UIblue2}
+
+\hypersetup{
+	colorlinks=true,
+	linkcolor=UIblue2,
+	filecolor=magenta,
+	urlcolor=UIblue2
+}
+
+\makeatletter
+\newcommand\disablecolorlinks{\def\HyColor@UseColor##1{}}
+\makeatletter
+\addtobeamertemplate{headline}{\disablecolorlinks{}}{}
+\addtobeamertemplate{footline}{\disablecolorlinks{}}{}
+

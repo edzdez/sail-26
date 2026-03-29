@@ -130,7 +130,6 @@
 \begin{frame}
 	\frametitle{Arithmetic Expressions: Semantics}
 
-	% FIXME: Should we get rid of the (pause) shadows?
 	\[
 		\infer[(\textsc{Const})]
 		{
@@ -138,7 +137,6 @@
 		}
 		{}
 	\]
-	\pause
 	\vspace{.5em}
 	\[
 		\infer[(\textsc{Add})]
@@ -149,7 +147,6 @@
 			e_1 \Downarrow \num{n} & e_2 \Downarrow \num{m}
 		}
 		\qquad
-		\pause
 		\infer[(\textsc{Mul})]
 		{
 			e_1 * e_2 \Downarrow \num{n \cdot m}
@@ -165,26 +162,75 @@
 \begin{frame}
 	\frametitle{Adding Variables: Syntax}
 
-	\centering
-	\begin{grammar}
-		\firstcase{e}{\num{n}}{Numeric constants}
-		\otherform{x}{Variable reference}
-		\otherform{\nonterm{e} + \nonterm{e}}{Addition}
-		\otherform{\nonterm{e} * \nonterm{e}}{Multiplication}
-		\otherform{\texttt{let $x$ = $\nonterm{e}$ in $\nonterm{e}$}}{Variable definition}
-	\end{grammar}
+	\begin{center}
+		\begin{grammar}
+			\firstcase{e}{\num{n}}{Numeric constants}
+			\otherform{\textcolor{UIUCorange}{x}}{\textcolor{UIUCorange}{Variable reference}}
+			\otherform{\nonterm{e} + \nonterm{e}}{Addition}
+			\otherform{\nonterm{e} * \nonterm{e}}{Multiplication}
+			\otherform{\textcolor{UIUCorange}{\texttt{let $x$ = $\nonterm{e}$ in $\nonterm{e}$}}}{\textcolor{UIUCorange}{Variable definition}}
+		\end{grammar}
+	\end{center}
 
-	% TODO: examples
+	In English, an expression $e$ is:
+	\vspace{-\parskip}
+	\begin{itemize}
+		\item a numeric constant \num{$n$} where $n$ is a number,
+		\item \textcolor{UIUCorange}{a variable reference $x$ where $x$ is an identifier,}
+		\item a sum $e \mathrel{\texttt{+}} e$ where each $e$ is an expression,
+		\item a product $e \mathrel{\texttt{*}} e$ where each $e$ is an expression, or
+		\item \textcolor{UIUCorange}{a ``let'' expression, where we define a variable $x$.}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Adding Variables: Example}
+
+	\begin{columns}
+		\begin{column}{0.47\textwidth}
+			\centering
+			\begin{minipage}{.61\textwidth}
+				\texttt{let x = 4} \\
+				\texttt{\phantom{l}in (let y = 5} \\
+				\texttt{\phantom{ in (l}in (x + y))}
+			\end{minipage}
+		\end{column}
+		\begin{column}{0.06\textwidth}
+			\centering
+			$\longmapsto$
+		\end{column}
+		\begin{column}{0.47\textwidth}
+			\centering
+			\begin{forest}
+				[
+					\texttt{let}
+					[ \texttt{x} ]
+					[ \num{4} ]
+					[
+						\texttt{let}
+						[ \texttt{y} ]
+						[ \num{5} ]
+						[
+							\texttt{+}
+							[ \texttt{x} ]
+							[ \texttt{y} ]
+						]
+					]
+				]
+			\end{forest}
+		\end{column}
+	\end{columns}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Adding Variables: Context}
 
-	How do we keep track of the current value of a variable?
-	By introducing an \emph{evaluation context}, which you can think of as a ``bag'' of data necessary to execute a program.
+	Now that we have variables, the value of a program depends not only on the source code but also on the \emph{environment} in which it is executed.
+	For example, the value of the program \texttt{x + 5} depends on the current value of $x$!
 
-	In \textsc{Arith}, the context only contained the program to be executed.
-	In \textsc{Arith+Var}, we must also keep track of a mapping of variable symbols to values, which we'll call the \emph{environment}:
+	Hence, we introduce an \emph{execution context} to keep track of the all inputs we need.
+	Previously, the context only program's source code.
+	Now, it also contains a mapping of variable names to values:
 	\[
 		\ctx{ \text{program}, \text{environment} }
 	\]
@@ -192,6 +238,7 @@
 
 \begin{frame}
 	\frametitle{Adding Variables: Semantics}
+	% FIXME: orange might not be the best color for additions...
 	\[
 		\infer[(\textsc{Const})]
 		{
@@ -199,41 +246,43 @@
 		}
 		{}
 		\qquad
-		\infer[(\textsc{Var})]
-		{
-			\ctx{ x, S } \Downarrow \num{n}
-		}
-		{
-			x \mapsto \num{n} \text{ in } S
-		}
+		\textcolor{UIUCorange}{\infer[(\textsc{Var})]
+			{
+				\ctx{ x, S } \Downarrow \num{n}
+			}
+			{
+				x \mapsto \num{n} \text{ in } S
+			}}
 	\]
 	\vspace{.5em}
 	\[
 		\infer[(\textsc{Add})]
 		{
-			e_1 + e_2 \Downarrow \num{m + n}
+			\ctx{ e_1 + e_2, S } \Downarrow \num{m + n}
 		}
 		{
-			e_1 \Downarrow \num{m} & e_2 \Downarrow \num{n}
-		}
-		\qquad
-		\infer[(\textsc{Mul})]
-		{
-			e_1 * e_2 \Downarrow \num{m \cdot n}
-		}
-		{
-			e_1 \Downarrow \num{m} & e_2 \Downarrow \num{n}
+			\ctx{ e_1, S } \Downarrow \num{m} & \ctx{ e_2, S } \Downarrow \num{n}
 		}
 	\]
 	\vspace{.5em}
 	\[
-		\infer[(\textsc{Let})]
+		\infer[(\textsc{Mul})]
 		{
-			\ctx{ \texttt{let $x$ = $e_1$ in $e_2$}, S } \Downarrow v
+			\ctx{ e_1 * e_2, S } \Downarrow \num{m \cdot n}
 		}
 		{
-			\ctx{ e_1, S } \Downarrow v_1 & \ctx{ e_2, S\set{ x \mapsto v_1 } } \Downarrow v
+			\ctx{ e_1, S } \Downarrow \num{m} & \ctx{ e_2, S } \Downarrow \num{n}
 		}
+	\]
+	\vspace{.5em}
+	\[
+		\textcolor{UIUCorange}{\infer[(\textsc{Let})]
+			{
+				\ctx{ \texttt{let $x$ = $e_1$ in $e_2$}, S } \Downarrow v
+			}
+			{
+				\ctx{ e_1, S } \Downarrow v_1 & \ctx{ e_2, S\set{ x \mapsto v_1 } } \Downarrow v
+			}}
 	\]
 \end{frame}
 

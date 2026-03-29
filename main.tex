@@ -23,6 +23,16 @@
 
 \begin{frame}
 	\frametitle{What are Semantics?}
+
+	There are two parts to every programming language: the \emph{syntax} and the \emph{semantics}.
+
+	Syntax describes the \emph{structure} of code (i.e. what is an allowed sequence of symbols).
+	For example, the sequence \texttt{5 + 3} is allowed, but \texttt{5 + +} is not.
+
+	Semantics ascribes \emph{meaning} to code.
+	For example, we might define the meaning of \texttt{x = 5 + 3} to be ``compute the result of \texttt{5 + 3} and store it in the variable \texttt{x}.''
+
+	Note that there may be sequences of symbols that are structurally correct but meaningless, e.g. \texttt{5 = 5 + "hello, world"}.
 \end{frame}
 
 \begin{frame}

@@ -4,6 +4,8 @@
 \usepackage{./prelude}
 \usepackage[mathrm=sym]{unicode-math}
 
+\setlength{\parskip}{\baselineskip}
+
 \newcommand{\num}[1]{\texttt{num}[#1]}
 \newcommand{\ctx}[1]{\langle #1 \rangle}
 \newcommand{\set}[1]{\{ #1 \}}
@@ -53,7 +55,7 @@
 \begin{frame}
 	\frametitle{Arithmetic Expressions: Values}
 
-	The first step of defining a semantics is to decide on what the set of \emph{values} should be, i.e. a stopping condition.
+	The first step of defining a semantics is to decide on what the set of \emph{values} should be, i.e. what expressions are ``fully evaluated.''
 
 	In \textsc{Arith}, these are the numeric constants: terms of the form \num{$n$}.
 \end{frame}

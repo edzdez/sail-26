@@ -1,6 +1,6 @@
 \documentclass{beamer}
 \usepackage{amsmath}
-\usepackage{formal-grammar,proof}
+\usepackage{formal-grammar,proof,forest}
 \usepackage{./prelude}
 \usepackage[mathrm=sym]{unicode-math}
 
@@ -41,11 +41,50 @@
 	\centering
 	\begin{grammar}
 		\firstcase{e}{\num{n}}{Numeric constants}
-		\otherform{\nonterm{e} + \nonterm{e}}{Addition}
-		\otherform{\nonterm{e} * \nonterm{e}}{Multiplication}
+		\otherform{\nonterm{e} \mathrel{\texttt{+}} \nonterm{e}}{Addition}
+		\otherform{\nonterm{e} \mathrel{\texttt{*}} \nonterm{e}}{Multiplication}
 	\end{grammar}
+\end{frame}
 
-	% TODO: examples
+\begin{frame}
+	\frametitle{Arithmetic Expressions: Example}
+
+	\begin{columns}
+		\begin{column}{0.45\textwidth}
+			\centering
+			\texttt{1 + ((2 + 3) * 4)}
+		\end{column}
+		\begin{column}{0.1\textwidth}
+			\centering
+			$\longmapsto$
+		\end{column}
+		\begin{column}{0.45\textwidth}
+			\centering
+			\begin{forest}
+				[
+					\texttt{+}
+					[
+						\num{1}
+					]
+					[
+						\texttt{*}
+						[
+							\texttt{+}
+							[
+								\num{2}
+							]
+							[
+								\num{3}
+							]
+						]
+						[
+							\num{4}
+						]
+					]
+				]
+			\end{forest}
+		\end{column}
+	\end{columns}
 \end{frame}
 
 \begin{frame}
@@ -53,11 +92,7 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Arithmetic Expressions: Values}
-
-	The first step of defining a semantics is to decide on what the set of \emph{values} should be, i.e. what expressions are ``fully evaluated.''
-
-	In \textsc{Arith}, these are the numeric constants: terms of the form \num{$n$}.
+	\frametitle{Aside: Inference Rules}
 \end{frame}
 
 \begin{frame}
@@ -65,18 +100,18 @@
 	\[
 		\infer[(\textsc{Add})]
 		{
-			e_1 + e_2 \Downarrow \num{v_1 + v_2}
+			e_1 + e_2 \Downarrow \num{n + m}
 		}
 		{
-			e_1 \Downarrow v_1 & e_2 \Downarrow v_2
+			e_1 \Downarrow \num{n} & e_2 \Downarrow \num{m}
 		}
 		\qquad
 		\infer[(\textsc{Mul})]
 		{
-			e_1 * e_2 \Downarrow \num{v_1 * v_2}
+			e_1 * e_2 \Downarrow \num{n \cdot m}
 		}
 		{
-			e_1 \Downarrow v_1 & e_2 \Downarrow v_2
+			e_1 \Downarrow \num{n} & e_2 \Downarrow \num{m}
 		}
 	\]
 	\vspace{.5em}

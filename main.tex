@@ -38,12 +38,21 @@
 \begin{frame}
 	\frametitle{Arithmetic Expressions: Syntax}
 
-	\centering
-	\begin{grammar}
-		\firstcase{e}{\num{n}}{Numeric constants}
-		\otherform{\nonterm{e} \mathrel{\texttt{+}} \nonterm{e}}{Addition}
-		\otherform{\nonterm{e} \mathrel{\texttt{*}} \nonterm{e}}{Multiplication}
-	\end{grammar}
+	\begin{center}
+		\begin{grammar}
+			\firstcase{e}{\num{n}}{Numeric constants}
+			\otherform{\nonterm{e} \mathrel{\texttt{+}} \nonterm{e}}{Addition}
+			\otherform{\nonterm{e} \mathrel{\texttt{*}} \nonterm{e}}{Multiplication}
+		\end{grammar}
+	\end{center}
+
+	In English, an expression $e$ is:
+	\vspace{-\parskip}
+	\begin{itemize}
+		\item a numeric constant \num{$n$} where $n$ is a number,
+		\item a sum $e \mathrel{\texttt{+}} e$ where each $e$ is an expression, or
+		\item a product $e \mathrel{\texttt{*}} e$ where each $e$ is an expression.
+	\end{itemize}
 \end{frame}
 
 \begin{frame}

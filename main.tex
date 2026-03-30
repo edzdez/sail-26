@@ -37,55 +37,55 @@
 
 \begin{frame}<1-2>[label=why_semantics_outline]
 	\frametitle{Why study Semantics?}
-    \begin{itemize}
-        \item <1-> Who implements our programming languages?
-            \begin{itemize}
-                \item <2-> Understand what code `means' \textit{before} writing compiler/intepreter!
-            \end{itemize}
-        \item <4-> How do we check our programs?
-            \begin{itemize}
-                \item <5-> `Program verification'
-            \end{itemize}
-    \end{itemize}
+	\begin{itemize}
+		\item <1-> Who implements our programming languages?
+		      \begin{itemize}
+			      \item <2-> Understand what code `means' \textit{before} writing compiler/intepreter!
+		      \end{itemize}
+		\item <4-> How do we check our programs?
+		      \begin{itemize}
+			      \item <5-> `Program verification'
+		      \end{itemize}
+	\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle{Why study Semantics?}
-    \begin{semiverbatim}
-    >>> x = 3
-    >>> if (x > 0):
-    ...     print('apple')
-    ... else:
-    ...     print('banana')
-    ...\pause
-    cucumber
-    \end{semiverbatim}
+	\begin{semiverbatim}
+		>>> x = 3
+		>>> if (x > 0):
+		...     print('apple')
+		... else:
+		...     print('banana')
+		...\pause
+		cucumber
+	\end{semiverbatim}
 \end{frame}
 
 \againframe<3-5>{why_semantics_outline}
 
 \begin{frame}
 	\frametitle{Why study Semantics?}
-    \begin{figure}
-        \centering
-        \includegraphics[width=0.6\linewidth]{media/ariane-5-explosion.jpg}
-        \caption{\small Self-destruction of Ariane 5, flight V88}
-    \end{figure}
-    \hfill
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.6\linewidth]{media/ariane-5-explosion.jpg}
+		\caption{\small Self-destruction of Ariane 5, flight V88}
+	\end{figure}
+	\hfill
 
 \end{frame}
 
 \begin{frame}
 	\frametitle{Why study Semantics?}
-    \begin{quote}
-        The launcher started to disintegrate at about H0 + 39 seconds\dots the software exception was caused during\dots conversion from 64-bit floating point to 16-bit signed integer.\\
-        \vspace{1ex}
-        \noindent -- Ariane 5 Flight 501 Failure, Report by the Inquiry Board
-    \end{quote} 
-    \hfill
+	\begin{quote}
+		The launcher started to disintegrate at about H0 + 39 seconds\dots the software exception was caused during\dots conversion from 64-bit floating point to 16-bit signed integer.\\
+		\vspace{1ex}
+		\noindent -- Ariane 5 Flight 501 Failure, Report by the Inquiry Board
+	\end{quote}
+	\hfill
 
-    \pause
-    \$337 million floating point error!
+	\pause
+	\$337 million floating point error!
 \end{frame}
 
 \begin{frame}
@@ -190,30 +190,30 @@
 \begin{frame}
 	\frametitle{Arithmetic Expressions: Semantics}
 
-	\[
-		\infer[(\textsc{Const})]
-		{
-			\num{n} \Downarrow \num{n}
-		}
-		{}
-	\]
+	\uncover<1,4>{\[
+			\infer[(\textsc{Const})]
+			{
+				\num{n} \Downarrow \num{n}
+			}
+			{}
+		\]}
 	\vspace{.5em}
 	\[
-		\infer[(\textsc{Add})]
-		{
-			e_1 + e_2 \Downarrow \num{n + m}
-		}
-		{
-			e_1 \Downarrow \num{n} & e_2 \Downarrow \num{m}
-		}
+		\uncover<2,4>{\infer[(\textsc{Add})]
+			{
+				e_1 + e_2 \Downarrow \num{n + m}
+			}
+			{
+				e_1 \Downarrow \num{n} & e_2 \Downarrow \num{m}
+			}}
 		\qquad
-		\infer[(\textsc{Mul})]
-		{
-			e_1 * e_2 \Downarrow \num{n \cdot m}
-		}
-		{
-			e_1 \Downarrow \num{n} & e_2 \Downarrow \num{m}
-		}
+		\uncover<3,4>{\infer[(\textsc{Mul})]
+			{
+				e_1 * e_2 \Downarrow \num{n \cdot m}
+			}
+			{
+				e_1 \Downarrow \num{n} & e_2 \Downarrow \num{m}
+			}}
 	\]
 \end{frame}
 
@@ -300,49 +300,49 @@
 	\frametitle{Adding Variables: Semantics}
 	% FIXME: orange might not be the best color for additions...
 	\[
-		\infer[(\textsc{Const})]
-		{
-			\ctx{ \num{n}, S } \Downarrow \num{n}
-		}
-		{}
+		\uncover<2>{\infer[(\textsc{Const})]
+			{
+				\ctx{ \num{n}, S } \Downarrow \num{n}
+			}
+			{}}
 		\qquad
-		\textcolor{UIUCorange}{\infer[(\textsc{Var})]
+		\infer[(\textsc{Var})]
+		{
+			\ctx{ x, S } \Downarrow \num{n}
+		}
+		{
+			x \mapsto \num{n} \text{ in } S
+		}
+	\]
+	\vspace{.5em}
+	\uncover<2>{\[
+			\infer[(\textsc{Add})]
 			{
-				\ctx{ x, S } \Downarrow \num{n}
+				\ctx{ e_1 + e_2, S } \Downarrow \num{m + n}
 			}
 			{
-				x \mapsto \num{n} \text{ in } S
-			}}
-	\]
-	\vspace{.5em}
-	\[
-		\infer[(\textsc{Add})]
-		{
-			\ctx{ e_1 + e_2, S } \Downarrow \num{m + n}
-		}
-		{
-			\ctx{ e_1, S } \Downarrow \num{m} & \ctx{ e_2, S } \Downarrow \num{n}
-		}
-	\]
-	\vspace{.5em}
-	\[
-		\infer[(\textsc{Mul})]
-		{
-			\ctx{ e_1 * e_2, S } \Downarrow \num{m \cdot n}
-		}
-		{
-			\ctx{ e_1, S } \Downarrow \num{m} & \ctx{ e_2, S } \Downarrow \num{n}
-		}
-	\]
-	\vspace{.5em}
-	\[
-		\textcolor{UIUCorange}{\infer[(\textsc{Let})]
+				\ctx{ e_1, S } \Downarrow \num{m} & \ctx{ e_2, S } \Downarrow \num{n}
+			}
+		\]
+		\vspace{.5em}
+		\[
+			\infer[(\textsc{Mul})]
 			{
-				\ctx{ \texttt{let $x$ = $e_1$ in $e_2$}, S } \Downarrow v
+				\ctx{ e_1 * e_2, S } \Downarrow \num{m \cdot n}
 			}
 			{
-				\ctx{ e_1, S } \Downarrow v_1 & \ctx{ e_2, S\set{ x \mapsto v_1 } } \Downarrow v
-			}}
+				\ctx{ e_1, S } \Downarrow \num{m} & \ctx{ e_2, S } \Downarrow \num{n}
+			}
+		\]}
+	\vspace{.5em}
+	\[
+		\infer[(\textsc{Let})]
+		{
+			\ctx{ \texttt{let $x$ = $e_1$ in $e_2$}, S } \Downarrow v
+		}
+		{
+			\ctx{ e_1, S } \Downarrow v_1 & \ctx{ e_2, S\set{ x \mapsto v_1 } } \Downarrow v
+		}
 	\]
 \end{frame}
 

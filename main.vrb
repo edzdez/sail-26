@@ -1,0 +1,10 @@
+\frametitle{Why study Semantics?}
+	\begin{semiverbatim}
+		>>> x = 3
+		>>> if (x > 0):
+		...     print('apple')
+		... else:
+		...     print('banana')
+		...\pause
+		cucumber
+	\end{semiverbatim}

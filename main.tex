@@ -1,8 +1,10 @@
 \documentclass{beamer}
 \usepackage{amsmath}
-\usepackage{formal-grammar,proof, listings}
+\usepackage{formal-grammar,proof,forest}
 \usepackage{./prelude}
 \usepackage[mathrm=sym]{unicode-math}
+
+\setlength{\parskip}{\baselineskip}
 
 \newcommand{\num}[1]{\texttt{num}[#1]}
 \newcommand{\ctx}[1]{\langle #1 \rangle}
@@ -17,10 +19,20 @@
 
 \frame{\titlepage}
 
-\section{Introduction}
+%\section{Introduction}
 
 \begin{frame}
 	\frametitle{What are Semantics?}
+
+	There are two parts to every programming language: the \emph{syntax} and the \emph{semantics}.
+
+	Syntax describes the \emph{structure} of code (i.e. what is an allowed sequence of symbols).
+	For example, the sequence \texttt{5 + 3} is allowed, but \texttt{5 + +} is not.
+
+	Semantics ascribes \emph{meaning} to code.
+	For example, we might define the meaning of \texttt{x = 5 + 3} to be ``compute the result of \texttt{5 + 3} and store it in the variable \texttt{x}.''
+
+	Note that there may be sequences of symbols that are structurally correct but meaningless, e.g. \texttt{5 = 5 + "hello, world"}.
 \end{frame}
 
 \begin{frame}<1-2>[label=why_semantics_outline]
@@ -80,59 +92,128 @@
 	\tableofcontents
 \end{frame}
 
+
 \section{Arithmetic Expressions}
 
 \begin{frame}
 	\frametitle{Arithmetic Expressions: Syntax}
 
-	\centering
-	\begin{grammar}
-		\firstcase{e}{\num{n}}{Numeric constants}
-		\otherform{\nonterm{e} + \nonterm{e}}{Addition}
-		\otherform{\nonterm{e} * \nonterm{e}}{Multiplication}
-	\end{grammar}
+	\begin{center}
+		\begin{grammar}
+			\firstcase{e}{\num{n}}{Numeric constants}
+			\otherform{\nonterm{e} \mathrel{\texttt{+}} \nonterm{e}}{Addition}
+			\otherform{\nonterm{e} \mathrel{\texttt{*}} \nonterm{e}}{Multiplication}
+		\end{grammar}
+	\end{center}
 
-	% TODO: examples
+	In English, an expression $e$ is:
+	\vspace{-\parskip}
+	\begin{itemize}
+		\item a numeric constant \num{$n$} where $n$ is a number,
+		\item a sum $e \mathrel{\texttt{+}} e$ where each $e$ is an expression, or
+		\item a product $e \mathrel{\texttt{*}} e$ where each $e$ is an expression.
+	\end{itemize}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Aside: Operational Semantics}
+	\frametitle{Arithmetic Expressions: Example}
+
+	\begin{columns}
+		\begin{column}{0.45\textwidth}
+			\centering
+			\texttt{1 + ((2 + 3) * 4)}
+		\end{column}
+		\begin{column}{0.1\textwidth}
+			\centering
+			$\longmapsto$
+		\end{column}
+		\begin{column}{0.45\textwidth}
+			\centering
+			\begin{forest}
+				[
+					\texttt{+}
+					[
+						\num{1}
+					]
+					[
+						\texttt{*}
+						[
+							\texttt{+}
+							[
+								\num{2}
+							]
+							[
+								\num{3}
+							]
+						]
+						[
+							\num{4}
+						]
+					]
+				]
+			\end{forest}
+		\end{column}
+	\end{columns}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Arithmetic Expressions: Values}
+	\frametitle{Aside: (Big-step) Operational Semantics}
 
-	The first step of defining a semantics is to decide on what the set of \emph{values} should be, i.e. a stopping condition.
+	The goal of \emph{operational semantics} is to describe a program by \textbf{what it does}.
 
-	In \textsc{Arith}, these are the numeric constants: terms of the form \num{$n$}.
+	But what does this mean?
+	One idea is to think of programs as \emph{functions}:
+	given some inputs, we get some output.
+
+	Following this intuition, big-step semantics describes a program by its final result.
+	For example, the program $\texttt{1 + ((2 + 3) * 4)}$ is described by the number $21$.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Aside: Inference Rules}
+
+	As computer scientists, we want to describe a program's semantics by formal rules, so that we can both reason about them mathematically and implement them in code.
+
+	Following the tradition of logic, semantics are described by \emph{inference rules}:
+	\[
+		\infer[(\textsc{Rule-Name})]
+		{
+			J
+		}
+		{
+			J_1 & J_2 & \dots & J_n
+		}
+	\]
+	In English, we say that ``$J$ holds, provided that $J_1$, $J_2$, $\dots$, $J_n$ all hold.''
 \end{frame}
 
 \begin{frame}
 	\frametitle{Arithmetic Expressions: Semantics}
-	\[
-		\infer[(\textsc{Add})]
-		{
-			e_1 + e_2 \Downarrow \num{v_1 + v_2}
-		}
-		{
-			e_1 \Downarrow v_1 & e_2 \Downarrow v_2
-		}
-		\qquad
-		\infer[(\textsc{Mul})]
-		{
-			e_1 * e_2 \Downarrow \num{v_1 * v_2}
-		}
-		{
-			e_1 \Downarrow v_1 & e_2 \Downarrow v_2
-		}
-	\]
-	\vspace{.5em}
+
 	\[
 		\infer[(\textsc{Const})]
 		{
 			\num{n} \Downarrow \num{n}
 		}
 		{}
+	\]
+	\vspace{.5em}
+	\[
+		\infer[(\textsc{Add})]
+		{
+			e_1 + e_2 \Downarrow \num{n + m}
+		}
+		{
+			e_1 \Downarrow \num{n} & e_2 \Downarrow \num{m}
+		}
+		\qquad
+		\infer[(\textsc{Mul})]
+		{
+			e_1 * e_2 \Downarrow \num{n \cdot m}
+		}
+		{
+			e_1 \Downarrow \num{n} & e_2 \Downarrow \num{m}
+		}
 	\]
 \end{frame}
 
@@ -141,26 +222,75 @@
 \begin{frame}
 	\frametitle{Adding Variables: Syntax}
 
-	\centering
-	\begin{grammar}
-		\firstcase{e}{\num{n}}{Numeric constants}
-		\otherform{x}{Variable reference}
-		\otherform{\nonterm{e} + \nonterm{e}}{Addition}
-		\otherform{\nonterm{e} * \nonterm{e}}{Multiplication}
-		\otherform{\texttt{let $x$ = $\nonterm{e}$ in $\nonterm{e}$}}{Variable definition}
-	\end{grammar}
+	\begin{center}
+		\begin{grammar}
+			\firstcase{e}{\num{n}}{Numeric constants}
+			\otherform{\textcolor{UIUCorange}{x}}{\textcolor{UIUCorange}{Variable reference}}
+			\otherform{\nonterm{e} + \nonterm{e}}{Addition}
+			\otherform{\nonterm{e} * \nonterm{e}}{Multiplication}
+			\otherform{\textcolor{UIUCorange}{\texttt{let $x$ = $\nonterm{e}$ in $\nonterm{e}$}}}{\textcolor{UIUCorange}{Variable definition}}
+		\end{grammar}
+	\end{center}
 
-	% TODO: examples
+	In English, an expression $e$ is:
+	\vspace{-\parskip}
+	\begin{itemize}
+		\item a numeric constant \num{$n$} where $n$ is a number,
+		\item \textcolor{UIUCorange}{a variable reference $x$ where $x$ is an identifier,}
+		\item a sum $e \mathrel{\texttt{+}} e$ where each $e$ is an expression,
+		\item a product $e \mathrel{\texttt{*}} e$ where each $e$ is an expression, or
+		\item \textcolor{UIUCorange}{a ``let'' expression, where we define a variable $x$.}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Adding Variables: Example}
+
+	\begin{columns}
+		\begin{column}{0.47\textwidth}
+			\centering
+			\begin{minipage}{.61\textwidth}
+				\texttt{let x = 4} \\
+				\texttt{\phantom{l}in (let y = 5} \\
+				\texttt{\phantom{ in (l}in (x + y))}
+			\end{minipage}
+		\end{column}
+		\begin{column}{0.06\textwidth}
+			\centering
+			$\longmapsto$
+		\end{column}
+		\begin{column}{0.47\textwidth}
+			\centering
+			\begin{forest}
+				[
+					\texttt{let}
+					[ \texttt{x} ]
+					[ \num{4} ]
+					[
+						\texttt{let}
+						[ \texttt{y} ]
+						[ \num{5} ]
+						[
+							\texttt{+}
+							[ \texttt{x} ]
+							[ \texttt{y} ]
+						]
+					]
+				]
+			\end{forest}
+		\end{column}
+	\end{columns}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Adding Variables: Context}
 
-	How do we keep track of the current value of a variable?
-	By introducing an \emph{evaluation context}, which you can think of as a ``bag'' of data necessary to execute a program.
+	Now that we have variables, the value of a program depends not only on the source code but also on the \emph{environment} in which it is executed.
+	For example, the value of the program \texttt{x + 5} depends on the current value of $x$!
 
-	In \textsc{Arith}, the context only contained the program to be executed.
-	In \textsc{Arith+Var}, we must also keep track of a mapping of variable symbols to values, which we'll call the \emph{environment}:
+	Hence, we introduce an \emph{execution context} to keep track of the all inputs we need.
+	Previously, the context only program's source code.
+	Now, it also contains a mapping of variable names to values:
 	\[
 		\ctx{ \text{program}, \text{environment} }
 	\]
@@ -168,6 +298,7 @@
 
 \begin{frame}
 	\frametitle{Adding Variables: Semantics}
+	% FIXME: orange might not be the best color for additions...
 	\[
 		\infer[(\textsc{Const})]
 		{
@@ -175,41 +306,43 @@
 		}
 		{}
 		\qquad
-		\infer[(\textsc{Var})]
-		{
-			\ctx{ x, S } \Downarrow \num{n}
-		}
-		{
-			x \mapsto \num{n} \text{ in } S
-		}
+		\textcolor{UIUCorange}{\infer[(\textsc{Var})]
+			{
+				\ctx{ x, S } \Downarrow \num{n}
+			}
+			{
+				x \mapsto \num{n} \text{ in } S
+			}}
 	\]
 	\vspace{.5em}
 	\[
 		\infer[(\textsc{Add})]
 		{
-			e_1 + e_2 \Downarrow \num{m + n}
+			\ctx{ e_1 + e_2, S } \Downarrow \num{m + n}
 		}
 		{
-			e_1 \Downarrow \num{m} & e_2 \Downarrow \num{n}
-		}
-		\qquad
-		\infer[(\textsc{Mul})]
-		{
-			e_1 * e_2 \Downarrow \num{m \cdot n}
-		}
-		{
-			e_1 \Downarrow \num{m} & e_2 \Downarrow \num{n}
+			\ctx{ e_1, S } \Downarrow \num{m} & \ctx{ e_2, S } \Downarrow \num{n}
 		}
 	\]
 	\vspace{.5em}
 	\[
-		\infer[(\textsc{Let})]
+		\infer[(\textsc{Mul})]
 		{
-			\ctx{ \texttt{let $x$ = $e_1$ in $e_2$}, S } \Downarrow v
+			\ctx{ e_1 * e_2, S } \Downarrow \num{m \cdot n}
 		}
 		{
-			\ctx{ e_1, S } \Downarrow v_1 & \ctx{ e_2, S\set{ x \mapsto v_1 } } \Downarrow v
+			\ctx{ e_1, S } \Downarrow \num{m} & \ctx{ e_2, S } \Downarrow \num{n}
 		}
+	\]
+	\vspace{.5em}
+	\[
+		\textcolor{UIUCorange}{\infer[(\textsc{Let})]
+			{
+				\ctx{ \texttt{let $x$ = $e_1$ in $e_2$}, S } \Downarrow v
+			}
+			{
+				\ctx{ e_1, S } \Downarrow v_1 & \ctx{ e_2, S\set{ x \mapsto v_1 } } \Downarrow v
+			}}
 	\]
 \end{frame}
 

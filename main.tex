@@ -1,6 +1,6 @@
 \documentclass{beamer}
 \usepackage{amsmath}
-\usepackage{formal-grammar,proof}
+\usepackage{formal-grammar,proof, listings}
 \usepackage{./prelude}
 \usepackage[mathrm=sym]{unicode-math}
 
@@ -24,7 +24,59 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Why Study Semantics?}
+	\frametitle{Why study Semantics?}
+    \begin{itemize}
+        \item Who implements our programming languages?
+            \begin{itemize}
+                \pause
+                \item Understand what code `means' \textit{before} writing compiler/intepreter!
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Why study Semantics?}
+    \begin{verbatim}
+    >>> x = 3
+    >>> if (x > 0):
+    ...     print('apple')
+    ... else:
+    ...     print('banana')
+    ... 
+    cucumber 
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Why study Semantics?}
+    \begin{itemize}
+        \item Who implements our programming languages?
+            \begin{itemize}
+                \item Understand what code `means' \textit{before} writing compiler/intepreter!
+            \end{itemize}
+        \pause
+        \item How do we check our programs?
+            \begin{itemize}
+                \pause
+                \item `Program verification'
+            \end{itemize}
+    \end{itemize}   
+\end{frame}
+
+\begin{frame}
+	\frametitle{Why study Semantics?}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.6\linewidth]{media/ariane-5-explosion.jpg}
+        {\small Self-destruction of Ariane 5, flight V88}
+    \end{figure}
+    \hfill
+
+    \begin{quote}
+        The launcher started to disintegrate at about H0 + 39 seconds \dots [The] software exception was caused during \dots conversion from 64-bit floating point to 16-bit signed integer 
+    \end{quote}
+
+    \$337 million floating point error!
 \end{frame}
 
 \begin{frame}

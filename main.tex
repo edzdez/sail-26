@@ -27,7 +27,7 @@
 	There are two parts to every programming language: the \emph{syntax} and the \emph{semantics}.
 
 	Syntax describes the \emph{structure} of code (i.e. what is an allowed sequence of symbols).
-    For example, the sequence \texttt{5 + 3} is allowed, but \texttt{5 + (} is not.
+	For example, the sequence \texttt{5 + 3} is allowed, but \texttt{5 + (} is not.
 
 	Semantics assigns \emph{meaning} to code.
 	For example, we might define the meaning of \texttt{x = 5 + 3} to be ``compute the result of \texttt{5 + 3} and store it in the variable \texttt{x}.''
@@ -42,7 +42,7 @@
 		      \begin{itemize}
 			      \item <2-> Understand what code `means' \textit{before} writing compiler/intepreter!
 		      \end{itemize}
-        \vspace{2ex}
+		      \vspace{2ex}
 		\item <4-> How do we check our programs?
 		      \begin{itemize}
 			      \item <5-> `Program verification'
@@ -90,9 +90,9 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Overview}
+	\frametitle{Overview}
 
-    \tableofcontents
+	\tableofcontents
 \end{frame}
 
 
@@ -175,9 +175,9 @@
 \begin{frame}
 	\frametitle{Aside: Inference Rules}
 
-	As computer scientists, we want to describe a program's semantics by formal rules so that we can reason about them mathematically and then implement them in code.
+	As computer scientists, we want to describe a program's semantics by formal rules so that we can reason about them mathematically and implement them in code.
 
-	Following the tradition of the subject of mathematical logic, semantics are described by \emph{inference rules}:
+	Following the tradition of mathematical logic, semantics are described by \emph{inference rules}:
 	\[
 		\infer[(\textsc{Rule-Name})]
 		{
@@ -187,7 +187,7 @@
 			J_1 & J_2 & \dots & J_n
 		}
 	\]
-	In English, we say that ``$J$ holds, provided that $J_1, J_2, \dots J_n$ all hold.''
+	In English, we say that ``$J$ holds, provided that $J_1, J_2, \dots, J_n$ all hold.''
 \end{frame}
 
 \begin{frame}
@@ -228,9 +228,9 @@
 	\begin{center}
 		\begin{grammar}
 			\firstcase{e}{\num{n}}{Numeric constants}
+			\otherform{\textcolor{UIUCorange}{x}}{\textcolor{UIUCorange}{Variable reference}}
 			\otherform{\nonterm{e} + \nonterm{e}}{Addition}
 			\otherform{\nonterm{e} * \nonterm{e}}{Multiplication}
-			\otherform{\textcolor{UIUCorange}{x}}{\textcolor{UIUCorange}{Variable reference}}
 			\otherform{\textcolor{UIUCorange}{\texttt{let $x$ = $\nonterm{e}$ in $\nonterm{e}$}}}{\textcolor{UIUCorange}{Variable definition}}
 		\end{grammar}
 	\end{center}
@@ -239,9 +239,9 @@
 	\vspace{-\parskip}
 	\begin{itemize}
 		\item a numeric constant \num{$n$} where $n$ is a number,
+		\item \textcolor{UIUCorange}{a variable reference $x$ where $x$ is an identifier,}
 		\item a sum $e \mathrel{\texttt{+}} e$ where each $e$ is an expression,
 		\item a product $e \mathrel{\texttt{*}} e$ where each $e$ is an expression, or
-		\item \textcolor{UIUCorange}{a variable reference $x$ where $x$ is an identifier,}
 		\item \textcolor{UIUCorange}{a ``let'' expression, where we define a variable $x$.}
 	\end{itemize}
 \end{frame}
@@ -288,73 +288,71 @@
 \begin{frame}
 	\frametitle{Adding Variables: Context}
 
-	Now that we have variables, the output of a program depends not only on the source code but also on the `\emph{environment}' in which it is executed.
+	Now that we have variables, the output of a program depends not only on the source code but also on the \emph{environment} in which it is executed.
 
-    For example, the output of the program \texttt{x + 5} depends on the current value of $x$!
+	For example, the output of the program \texttt{x + 5} depends on the current value of $x$!
 
-    %Changed ``value of program" --> ``output of program"
-
-	Hence, we introduce an `\emph{execution context}' to keep track of all the inputs we need.
+	Hence, we introduce an \emph{execution context} to keep track of all the inputs we need.
 
 \end{frame}
 
 \begin{frame}
 	\frametitle{Adding Variables: Context}
 
-    Previously, the context only contained the program's source code. Now, it also contains the values assigned to each variable name:
+	Previously, the context only contained the program's source code. Now, it also contains the values assigned to each variable name:
 	\[
 		\ctx{ \text{program}, \text{environment} }
 	\]
-
 \end{frame}
 
 \begin{frame}
 	\frametitle{Adding Variables: Semantics}
-	
-    \[
-        \infer[(\textsc{Const})]
-        {
-            \num{n} \Downarrow \num{n}
-        }
-        {}
-    \]
-	\vspace{.5em}
 	\[
-		\infer[(\textsc{Add})]
+		\uncover<2>{\infer[(\textsc{Const})]
 			{
-				e_1 + e_2 \Downarrow \num{n + m}
+				\ctx{ \num{n}, S } \Downarrow \num{n}
 			}
-			{
-				e_1 \Downarrow \num{n} & e_2 \Downarrow \num{m}
-			}
+			{}}
 		\qquad
-		\infer[(\textsc{Mul})]
-			{
-				e_1 * e_2 \Downarrow \num{n \cdot m}
-			}
-			{
-				e_1 \Downarrow \num{n} & e_2 \Downarrow \num{m}
-			}
-	\]
-    \vspace{.5em}
-    \[ \textcolor{UIUCorange}{
-        \infer[(\textsc{Var})]
+		\infer[(\textsc{Var})]
 		{
 			\ctx{ x, S } \Downarrow \num{n}
 		}
 		{
 			x \mapsto \num{n} \text{ in } S
-        } }
-    \]
-    \vspace{.5em}
-    \[ \textcolor{UIUCorange}{
-        \infer[(\textsc{Let})]
+		}
+	\]
+	\vspace{.5em}
+	\uncover<2>{\[
+			\infer[(\textsc{Add})]
+			{
+				\ctx{ e_1 + e_2, S } \Downarrow \num{m + n}
+			}
+			{
+				\ctx{ e_1, S } \Downarrow \num{m} & \ctx{ e_2, S } \Downarrow \num{n}
+			}
+		\]
+		\vspace{.5em}
+		\[
+			\infer[(\textsc{Mul})]
+			{
+				\ctx{ e_1 * e_2, S } \Downarrow \num{m \cdot n}
+			}
+			{
+				\ctx{ e_1, S } \Downarrow \num{m} & \ctx{ e_2, S } \Downarrow \num{n}
+			}
+		\]}
+	\vspace{.5em}
+	\[
+		\infer[(\textsc{Let})]
 		{
 			\ctx{ \texttt{let $x$ = $e_1$ in $e_2$}, S } \Downarrow v
 		}
 		{
 			\ctx{ e_1, S } \Downarrow v_1 & \ctx{ e_2, S\set{ x \mapsto v_1 } } \Downarrow v
-        } }
-    \]
+		}
+	\]
 \end{frame}
+
+
 \end{document}

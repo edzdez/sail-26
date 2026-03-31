@@ -349,7 +349,7 @@
 			\ctx{ \texttt{let $x$ = $e_1$ in $e_2$}, S } \Downarrow v
 		}
 		{
-			\ctx{ e_1, S } \Downarrow v_1 & \ctx{ e_2, S\set{ x \mapsto v_1 } } \Downarrow v
+			\ctx{ e_1, S } \Downarrow v_1 & \ctx{ e_2, S \cup \set{ x \mapsto v_1 } } \Downarrow v
 		}
 	\]
 \end{frame}

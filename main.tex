@@ -10,9 +10,9 @@
 \newcommand{\ctx}[1]{\langle #1 \rangle}
 \newcommand{\set}[1]{\{ #1 \}}
 
-\title{Template}
+\title{Programming Languages Semantics}
 \author{Ethan Zhang, Srujan Roplekar}
-\institute[]{}
+\institute[]{CS SAIL 2026}
 \date{}
 
 \begin{document}
@@ -27,9 +27,9 @@
 	There are two parts to every programming language: the \emph{syntax} and the \emph{semantics}.
 
 	Syntax describes the \emph{structure} of code (i.e. what is an allowed sequence of symbols).
-	For example, the sequence \texttt{5 + 3} is allowed, but \texttt{5 + +} is not.
+	For example, the sequence \texttt{5 + 3} is allowed, but \texttt{5 + (} is not.
 
-	Semantics ascribes \emph{meaning} to code.
+	Semantics assigns \emph{meaning} to code.
 	For example, we might define the meaning of \texttt{x = 5 + 3} to be ``compute the result of \texttt{5 + 3} and store it in the variable \texttt{x}.''
 
 	Note that there may be sequences of symbols that are structurally correct but meaningless, e.g. \texttt{5 = 5 + "hello, world"}.
@@ -42,6 +42,7 @@
 		      \begin{itemize}
 			      \item <2-> Understand what code `means' \textit{before} writing compiler/intepreter!
 		      \end{itemize}
+		      \vspace{2ex}
 		\item <4-> How do we check our programs?
 		      \begin{itemize}
 			      \item <5-> `Program verification'
@@ -89,6 +90,8 @@
 \end{frame}
 
 \begin{frame}
+	\frametitle{Overview}
+
 	\tableofcontents
 \end{frame}
 
@@ -172,9 +175,9 @@
 \begin{frame}
 	\frametitle{Aside: Inference Rules}
 
-	As computer scientists, we want to describe a program's semantics by formal rules, so that we can both reason about them mathematically and implement them in code.
+	As computer scientists, we want to describe a program's semantics by formal rules so that we can reason about them mathematically and implement them in code.
 
-	Following the tradition of logic, semantics are described by \emph{inference rules}:
+	Following the tradition of mathematical logic, semantics are described by \emph{inference rules}:
 	\[
 		\infer[(\textsc{Rule-Name})]
 		{
@@ -184,7 +187,7 @@
 			J_1 & J_2 & \dots & J_n
 		}
 	\]
-	In English, we say that ``$J$ holds, provided that $J_1$, $J_2$, $\dots$, $J_n$ all hold.''
+	In English, we say that ``$J$ holds, provided that $J_1, J_2, \dots, J_n$ all hold.''
 \end{frame}
 
 \begin{frame}
@@ -285,12 +288,18 @@
 \begin{frame}
 	\frametitle{Adding Variables: Context}
 
-	Now that we have variables, the value of a program depends not only on the source code but also on the \emph{environment} in which it is executed.
-	For example, the value of the program \texttt{x + 5} depends on the current value of $x$!
+	Now that we have variables, the output of a program depends not only on the source code but also on the \emph{environment} in which it is executed.
 
-	Hence, we introduce an \emph{execution context} to keep track of the all inputs we need.
-	Previously, the context only program's source code.
-	Now, it also contains a mapping of variable names to values:
+	For example, the output of the program \texttt{x + 5} depends on the current value of $x$!
+
+	Hence, we introduce an \emph{execution context} to keep track of all the inputs we need.
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Adding Variables: Context}
+
+	Previously, the context only contained the program's source code. Now, it also contains the values assigned to each variable name:
 	\[
 		\ctx{ \text{program}, \text{environment} }
 	\]
@@ -298,7 +307,6 @@
 
 \begin{frame}
 	\frametitle{Adding Variables: Semantics}
-	% FIXME: orange might not be the best color for additions...
 	\[
 		\uncover<2>{\infer[(\textsc{Const})]
 			{
@@ -341,9 +349,10 @@
 			\ctx{ \texttt{let $x$ = $e_1$ in $e_2$}, S } \Downarrow v
 		}
 		{
-			\ctx{ e_1, S } \Downarrow v_1 & \ctx{ e_2, S\set{ x \mapsto v_1 } } \Downarrow v
+			\ctx{ e_1, S } \Downarrow v_1 & \ctx{ e_2, S \cup \set{ x \mapsto v_1 } } \Downarrow v
 		}
 	\]
 \end{frame}
+
 
 \end{document}

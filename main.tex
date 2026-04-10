@@ -254,8 +254,7 @@
 			\centering
 			\begin{minipage}{.61\textwidth}
 				\texttt{let x = 4} \\
-				\texttt{\phantom{l}in (let y = 5} \\
-				\texttt{\phantom{ in (l}in (x + y))}
+                \texttt{\phantom{l}in (x + 5)}
 			\end{minipage}
 		\end{column}
 		\begin{column}{0.06\textwidth}
@@ -270,14 +269,9 @@
 					[ \texttt{x} ]
 					[ \num{4} ]
 					[
-						\texttt{let}
-						[ \texttt{y} ]
-						[ \num{5} ]
-						[
 							\texttt{+}
 							[ \texttt{x} ]
-							[ \texttt{y} ]
-						]
+                            [ \num{5} ]
 					]
 				]
 			\end{forest}

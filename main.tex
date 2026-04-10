@@ -319,7 +319,7 @@
 			\ctx{ x, S } \Downarrow \num{n}
 		}
 		{
-			x \mapsto \num{n} \text{ in } S
+			x = \num{n} \text{ in } S
 		}
 	\]
 	\vspace{.5em}
@@ -346,10 +346,10 @@
 	\[
 		\infer[(\textsc{Let})]
 		{
-			\ctx{ \texttt{let $x$ = $e_1$ in $e_2$}, S } \Downarrow v
+            \ctx{ \texttt{let $x$ = $e_1$ in $e_2$}, S } \Downarrow \num{n}
 		}
 		{
-			\ctx{ e_1, S } \Downarrow v_1 & \ctx{ e_2, S \cup \set{ x \mapsto v_1 } } \Downarrow v
+            \ctx{ e_1, S } \Downarrow \num{m} & \ctx{ e_2, S \cup \set{ x = \num{m}} }\Downarrow \num{n}
 		}
 	\]
 \end{frame}

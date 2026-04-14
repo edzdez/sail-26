@@ -254,7 +254,7 @@
 			\centering
 			\begin{minipage}{.61\textwidth}
 				\texttt{let x = 4} \\
-                \texttt{\phantom{l}in (x + 5)}
+				\texttt{\phantom{l}in (x + 5)}
 			\end{minipage}
 		\end{column}
 		\begin{column}{0.06\textwidth}
@@ -269,9 +269,9 @@
 					[ \texttt{x} ]
 					[ \num{4} ]
 					[
-							\texttt{+}
-							[ \texttt{x} ]
-                            [ \num{5} ]
+						\texttt{+}
+						[ \texttt{x} ]
+						[ \num{5} ]
 					]
 				]
 			\end{forest}
@@ -340,13 +340,20 @@
 	\[
 		\infer[(\textsc{Let})]
 		{
-            \ctx{ \texttt{let $x$ = $e_1$ in $e_2$}, S } \Downarrow \num{n}
+			\ctx{ \texttt{let $x$ = $e_1$ in $e_2$}, S } \Downarrow \num{n}
 		}
 		{
-            \ctx{ e_1, S } \Downarrow \num{m} & \ctx{ e_2, S \cup \set{ x = \num{m}} }\Downarrow \num{n}
+			\ctx{ e_1, S } \Downarrow \num{m} & \ctx{ e_2, S \cup \set{ x = \num{m}} }\Downarrow \num{n}
 		}
 	\]
 \end{frame}
 
+{
+\setlength\pagewidth{16.00cm}%
+\setlength\pageheight{9.00cm}%
+\usebackgroundtemplate{\includegraphics[width=\pagewidth]{10amEndSlide.pdf}}
+\begin{frame}[plain]
+\end{frame}
+}
 
 \end{document}

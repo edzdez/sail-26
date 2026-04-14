@@ -1,0 +1,96 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.75in, top=0.7in, bottom=0.7in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{formal-grammar,proof,forest}
+\usepackage{mdframed}
+\usepackage{graphicx}
+
+\newcommand{\blank}{\underline{\hspace{1.4cm}}}
+\newcommand{\num}[1]{\mathtt{num}[#1]}
+\newcommand{\eval}{\Downarrow}
+
+% Helper: scale a proof tree to text width
+\newcommand{\scaledproof}[1]{%
+  \sbox0{$#1$}%
+  \ifdim\wd0>\textwidth
+    \resizebox{\textwidth}{!}{$#1$}%
+  \else
+    $#1$%
+  \fi
+}
+
+\begin{document}
+\begin{center}
+  {\Large\textbf{Worksheet: Big-Step Operational Semantics}}\\[0.3em]
+  {\large CS SAIL 2026}
+\end{center}
+
+\noindent\textbf{Name:}\underline{\hspace{6cm}}
+\vspace{0.6em}
+
+\noindent Fill in the blank rule names and values. Work bottom-up: look at the conclusion and ask ``which rule fires here?''
+
+\hrule
+\vspace{0.8em}
+
+%% ---- Exercise 1 ----
+\noindent\textbf{Exercise 1.} Evaluate $1 + ((2+3)\times 4)$.
+
+\vspace{1em}
+\begin{center}
+\scaledproof{
+\infer[\blank]
+  {1 + ((2+3)\times 4) \eval \blank}
+  {
+    \infer[\blank]{ \num{1} \eval \blank }{}
+    &
+    \infer[\blank]
+      {(2+3)\times 4 \eval \blank}
+      {
+        \infer[\blank]
+          {\num{2}+\num{3} \eval \blank}
+          {
+            \infer[\blank]{\num{2} \eval \blank}{}
+            &
+            \infer[\blank]{\num{3} \eval \blank}{}
+          }
+        &
+        \infer[\blank]{\num{4} \eval \blank}{}
+      }
+  }
+}
+\end{center}
+
+\vspace{1em}
+\hrule
+\vspace{0.8em}
+
+%% ---- Exercise 2 ----
+\noindent\textbf{Exercise 2.} Evaluate $\mathtt{let}\ x = 4\ \mathtt{in}\ (x + 5)$ in environment $S = \{\}$.
+
+\vspace{1em}
+\begin{center}
+\scaledproof{
+\infer[\blank]
+  {\langle \mathtt{let}\ x=4\ \mathtt{in}\ (x+5),\; \{\} \rangle \eval \blank}
+  {
+    \infer[\blank]
+      {\langle \num{4},\; \{\} \rangle \eval \blank}
+      {}
+    &
+    \infer[\blank]
+      {\langle x+5,\; \{x \mapsto \num{4}\} \rangle \eval \blank}
+      {
+        \infer[\blank]
+          {\langle x,\; \{x \mapsto \num{4}\} \rangle \eval \blank}
+          {}
+        &
+        \infer[\blank]
+          {\langle \num{5},\; \{x \mapsto \num{4}\} \rangle \eval \blank}
+          {}
+      }
+  }
+}
+\end{center}
+
+\end{document}

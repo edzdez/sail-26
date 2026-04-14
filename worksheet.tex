@@ -1,13 +1,17 @@
 \documentclass[11pt]{article}
-\usepackage[margin=0.75in, top=0.7in, bottom=0.7in]{geometry}
+\usepackage[margin=0.5in, landscape]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{formal-grammar,proof,forest}
 \usepackage{mdframed}
 \usepackage{graphicx}
 
-\newcommand{\blank}{\underline{\hspace{1.4cm}}}
+% \newcommand{\blank}{\underline{\hspace{2cm}}}
+\newcommand{\blank}{(\hspace{3cm})}
+\newcommand{\rblank}{(\underline{\hspace{2.5cm}})}
 \newcommand{\num}[1]{\mathtt{num}[#1]}
 \newcommand{\eval}{\Downarrow}
+\newcommand{\J}[1]{\vphantom{\Big|}#1}
+% \newcommand{\J}[1]{\vphantom{\Big|}#1}
 
 % Helper: scale a proof tree to text width
 \newcommand{\scaledproof}[1]{%
@@ -21,76 +25,79 @@
 
 \begin{document}
 \begin{center}
-  {\Large\textbf{Worksheet: Big-Step Operational Semantics}}\\[0.3em]
-  {\large CS SAIL 2026}
+	{\Large\textbf{Worksheet: Programming Language Semantics}}\\[0.3em]
+	{\large CS SAIL 2026}
 \end{center}
 
 \noindent\textbf{Name:}\underline{\hspace{6cm}}
 \vspace{0.6em}
 
-\noindent Fill in the blank rule names and values. Work bottom-up: look at the conclusion and ask ``which rule fires here?''
+\noindent Fill in the blank rule names and values.
 
-\hrule
-\vspace{0.8em}
+\vspace{1em}
 
 %% ---- Exercise 1 ----
 \noindent\textbf{Exercise 1.} Evaluate $1 + ((2+3)\times 4)$.
 
 \vspace{1em}
 \begin{center}
-\scaledproof{
-\infer[\blank]
-  {1 + ((2+3)\times 4) \eval \blank}
-  {
-    \infer[\blank]{ \num{1} \eval \blank }{}
-    &
-    \infer[\blank]
-      {(2+3)\times 4 \eval \blank}
-      {
-        \infer[\blank]
-          {\num{2}+\num{3} \eval \blank}
-          {
-            \infer[\blank]{\num{2} \eval \blank}{}
-            &
-            \infer[\blank]{\num{3} \eval \blank}{}
-          }
-        &
-        \infer[\blank]{\num{4} \eval \blank}{}
-      }
-  }
-}
+	\Large
+	\scaledproof{
+		\infer[\rblank]
+		{\J{\num{1} + ((\num{2}+\num{3})\times \num{4}) \eval \blank}}
+		{
+			\infer[\rblank]{\J{\num{1} \eval \blank }}{}
+			&
+			\infer[\rblank]
+			{\J{(\num{2}+\num{3})\times \num{4} \eval \blank}}
+			{
+				\infer[\rblank]
+				{\J{\num{2}+\num{3} \eval \blank}}
+				{
+					\J{\infer[\rblank]{\num{2} \eval \blank}}{}
+					&
+					\J{\infer[\rblank]{\num{3} \eval \blank}}{}
+				}
+				&
+				\infer[\rblank]{\J{\num{4} \eval \blank}}{}
+			}
+		}
+	}
 \end{center}
 
 \vspace{1em}
-\hrule
-\vspace{0.8em}
 
 %% ---- Exercise 2 ----
 \noindent\textbf{Exercise 2.} Evaluate $\mathtt{let}\ x = 4\ \mathtt{in}\ (x + 5)$ in environment $S = \{\}$.
 
 \vspace{1em}
 \begin{center}
-\scaledproof{
-\infer[\blank]
-  {\langle \mathtt{let}\ x=4\ \mathtt{in}\ (x+5),\; \{\} \rangle \eval \blank}
-  {
-    \infer[\blank]
-      {\langle \num{4},\; \{\} \rangle \eval \blank}
-      {}
-    &
-    \infer[\blank]
-      {\langle x+5,\; \{x \mapsto \num{4}\} \rangle \eval \blank}
-      {
-        \infer[\blank]
-          {\langle x,\; \{x \mapsto \num{4}\} \rangle \eval \blank}
-          {}
-        &
-        \infer[\blank]
-          {\langle \num{5},\; \{x \mapsto \num{4}\} \rangle \eval \blank}
-          {}
-      }
-  }
-}
+	\Large
+	\scaledproof{
+		\infer[\rblank]
+		{\J{\langle \mathtt{let}\ x=\num{4}\ \mathtt{in}\ (x+\num{5}),\; \{\} \rangle \eval \blank}}
+		{
+			\infer[\rblank]
+			{\J{\langle \num{4},\; \{\} \rangle \eval \blank}}
+			{}
+			&
+			\infer[\rblank]
+			{\J{\langle x+\num{5},\; \{x = \num{4}\} \rangle \eval \blank}}
+			{
+				\infer[\rblank]
+				{\J{\langle x,\; \{x = \num{4}\} \rangle \eval \blank}}
+				{}
+				&
+				\infer[\rblank]
+				{\J{\left\langle \num{5},\; \{x = \num{4}\} \right\rangle \eval \blank}}
+				{}
+			}
+		}
+	}
 \end{center}
+
+\vspace{1em}
+
+\noindent\textbf{Exercise 3 (Bonus!).} What happens if we try to evaluate $\mathtt{let}\ x = 4\ \mathtt{in}\ (y + 5)$ in environment $S = \{\}$?
 
 \end{document}

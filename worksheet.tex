@@ -22,6 +22,7 @@
     $#1$%
   \fi
 }
+\pagenumbering{gobble}
 
 \begin{document}
 \begin{center}
@@ -54,9 +55,9 @@
 				\infer[\rblank]
 				{\J{\num{2}+\num{3} \eval \blank}}
 				{
-					\J{\infer[\rblank]{\num{2} \eval \blank}}{}
+					\infer[\rblank]{\J{\num{2} \eval \blank}}{}
 					&
-					\J{\infer[\rblank]{\num{3} \eval \blank}}{}
+					\infer[\rblank]{\J{\num{3} \eval \blank}}{}
 				}
 				&
 				\infer[\rblank]{\J{\num{4} \eval \blank}}{}
